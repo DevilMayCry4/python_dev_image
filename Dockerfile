@@ -50,9 +50,23 @@ RUN ln -sf /usr/local/bin/python3.10 /usr/local/bin/python3 \
 # 升级pip
 RUN pip3 install --upgrade pip
 
-# 设置工作目录
+# 配置SSH服务
+RUN mkdir -p /var/run/sshd
+
+# 设置root用户密码为123456
+RUN echo 'root:123456' | chpasswd
+
+# 允许root用户通过SSH登录
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH登录时需要密码认证
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
 # 设置工作目录
 WORKDIR /app
 
-# 容器启动命令
-CMD ["bash"]
+# 暴露SSH端口
+EXPOSE 22
+
+# 启动SSH服务
+CMD ["/usr/sbin/sshd", "-D"]
