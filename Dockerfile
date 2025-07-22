@@ -51,6 +51,7 @@ RUN ln -sf /usr/local/bin/python3.10 /usr/local/bin/python3 \
 RUN pip3 install --upgrade pip
 
 # 设置工作目录
+# 设置工作目录
 WORKDIR /app
 
 # 容器启动命令
